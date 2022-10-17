@@ -68,6 +68,7 @@ class train_utils(object):
             self.model = getattr(models, args.model_name)(feature=feature,out_channel=Dataset.num_classes)
         elif args.task == 'Graph':
             self.model = getattr(models2, args.model_name)(feature=feature, out_channel=Dataset.num_classes,pooltype=args.pooltype)
+            # self.model = getattr(models2,args.model_name)(feature=feature, out_channel=Dataset.num_classes)
         else:
             print('The task is wrong!')
 

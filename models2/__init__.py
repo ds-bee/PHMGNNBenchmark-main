@@ -5,6 +5,8 @@
 
 from models2.MLP import MLP
 from models2.GCN import GCN
+from models2.GCN2 import GCN2
+from models2.GCN1 import GCN1
 from models2.HoGCN import HoGCN
 from models2.ChebyNet import ChebyNet
 from models2.SGCN import SGCN

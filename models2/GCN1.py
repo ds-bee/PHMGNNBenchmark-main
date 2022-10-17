@@ -4,9 +4,14 @@ import torch.nn.functional as F
 from torch_geometric.nn import GCNConv,  BatchNorm # noqa
 from torch_geometric.nn import TopKPooling,  EdgePooling, ASAPooling, SAGPooling, global_mean_pool
 
-class GCN(torch.nn.Module):
+class GCN1(torch.nn.Module):
     def __init__(self, feature, out_channel,pooltype):
-        super(GCN, self).__init__()
+        super(GCN1, self).__init__()
+
+        # explainability
+        self.input = None
+        self.final_conv_acts = None
+        self.final_conv_grads = None
 
         self.pool1, self.pool2 = self.poollayer(pooltype)
 
@@ -20,39 +25,31 @@ class GCN(torch.nn.Module):
         self.dropout = nn.Dropout(0.2)
         self.fc1 = nn.Sequential(nn.Linear(512, out_channel))
 
+    def activations_hook(self, grad):
+        self.final_conv_grads = grad
 
     def forward(self, data, pooltype):
-        x, edge_index, batch= data.x, data.edge_index, data.batch
-        # x {250,512}
-        x = self.GConv1(x, edge_index) # x {250,1024}
-        print(x.shape)
-        print(edge_index.shape)
-        x = self.bn1(x) # x {250,1024}
-        print(x.shape)
-        x = F.relu(x) # x {250,1024}
-        print(x.shape)
-        x, edge_index, batch = self.poolresult(self.pool1,pooltype,x, edge_index, batch) # x {125,1024}
-        print(x.shape)
-        print(edge_index.shape)
-        x1 = global_mean_pool(x, batch) # x {125,1024} # x1 {25,1024}
-        print(x1.shape)
-        x = self.GConv2(x, edge_index)  # x {125,1024}
-        print(x.shape)
-        x = self.bn2(x)
-        print(x.shape)
+        h0, edge_index, batch= data.x, data.edge_index, data.batch
+        h0.requires_grad = True
+        self.input = h0
+        x = self.GConv1(h0, edge_index)
+        x = self.bn1(x)
         x = F.relu(x)
-        print(x.shape)
-        x, edge_index, batch = self.poolresult(self.pool2, pooltype, x, edge_index, batch) # x {84,1024} edge_index{2,290}
-        print(x.shape)
-        print(edge_index.shape)
-        x2 = global_mean_pool(x, batch)# x2 {25,1024}
-        print(x2.shape)
-        x = x1 + x2 # x {25,1024}
-        print(x.shape)
 
-        x = self.fc(x) # x {64,512}
-        x = self.dropout(x) # x {64,1024}
-        x = self.fc1(x) # x {64,1024}
+        x, edge_index, batch = self.poolresult(self.pool1,pooltype,x, edge_index, batch)
+
+        x1 = global_mean_pool(x, batch)
+
+        x = self.GConv2(x, edge_index)
+        x = self.bn2(x)
+        x = F.relu(x)
+        x, edge_index, batch = self.poolresult(self.pool2, pooltype, x, edge_index, batch)
+        x2 = global_mean_pool(x, batch)
+
+        x = x1 + x2
+        x = self.fc(x)
+        x = self.dropout(x)
+        x = self.fc1(x)
 
         return x
 

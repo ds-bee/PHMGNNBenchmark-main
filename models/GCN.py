@@ -62,5 +62,6 @@ class GCN(torch.nn.Module):
 
         return x
 if __name__ == '__main__':
+    # x = torch.tensor()
     model = GCN(1024,10)
     print(model)

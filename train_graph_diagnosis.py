@@ -14,7 +14,7 @@ args = None
 def parse_args():
     parser = argparse.ArgumentParser(description='Train')
     # basic parameters
-    parser.add_argument('--model_name', type=str, default='GCN', help='the name of the model')
+    parser.add_argument('--model_name', type=str, default='GCN1', help='the name of the model')
     parser.add_argument('--sample_length', type=int, default=1024, help='batchsize of the training process')
     parser.add_argument('--data_name', type=str, default='CWRURadius', help='the name of the data')
     parser.add_argument('--Input_type', choices=['TD', 'FD','other'],type=str, default='FD', help='the input type decides the length of input')
@@ -26,7 +26,7 @@ def parse_args():
 
     # Define the tasks
     parser.add_argument('--task', choices=['Node', 'Graph'], type=str,
-                        default='Node', help='Node classification or Graph classification')
+                        default='Graph', help='Node classification or Graph classification')
     parser.add_argument('--pooltype', choices=['TopKPool', 'EdgePool', 'ASAPool', 'SAGPool'],type=str,
                         default='EdgePool', help='For the Graph classification task')
 
