@@ -5,6 +5,7 @@
 
 from models.MLP import MLP
 from models.GCN import GCN
+from models.GCN1 import GCN1
 from models.ChebyNet import ChebyNet
 from models.SGCN import SGCN
 from models.GAT import GAT

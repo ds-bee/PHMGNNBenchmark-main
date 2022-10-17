@@ -16,7 +16,7 @@ def parse_args():
     # basic parameters
     parser.add_argument('--model_name', type=str, default='GCN', help='the name of the model')
     parser.add_argument('--sample_length', type=int, default=1024, help='batchsize of the training process')
-    parser.add_argument('--data_name', type=str, default='CWRURadius', help='the name of the data')
+    parser.add_argument('--data_name', type=str, default='CWRUKnn', help='the name of the data')
     parser.add_argument('--Input_type', choices=['TD', 'FD','other'],type=str, default='FD', help='the input type decides the length of input')
     parser.add_argument('--data_dir', type=str, default= "D:\\实验\\cwru\\CaseWesternReserveUniversityData-master", help='the directory of the data')
     parser.add_argument('--cuda_device', type=str, default='0', help='assign device')

@@ -24,7 +24,7 @@ class GCN(torch.nn.Module):
         self.conv3 = GCNConv(1024, 512)
         self.bn3 = BatchNorm(512)
 
-        self.fc1 = nn.Sequential(nn.Linear(512, out_channel))
+        self.fc1 = torch.nn.Linear(512, 10)
 
     def activations_hook(self, grad):
         self.final_conv_grads = grad
@@ -53,14 +53,14 @@ class GCN(torch.nn.Module):
 
         x = F.relu(self.final_conv_acts)  # h3
 
-        h4 = global_mean_pool(x, data.batch)
+        # h4 = global_mean_pool(x, data.batch)
 
         # x = self.fc(x)
         # x = self.dropout(x)
 
-        x = self.fc1(h4)
+        x = self.fc1(x)
 
         return x
 if __name__ == '__main__':
-    model = GCN(1024,10)
+    model = GCN(60,10)
     print(model)

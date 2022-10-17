@@ -14,7 +14,7 @@ import models2
 import datasets
 from utils.save import Save_Tool
 from utils.freeze import set_freeze_by_id
-
+import torch.nn.functional as F
 
 class train_utils(object):
     def __init__(self, args, save_dir):
@@ -114,8 +114,9 @@ class train_utils(object):
 
         # Invert the model and define the loss
         self.model.to(self.device)
-        self.criterion = nn.CrossEntropyLoss()
+        # self.criterion = nn.CrossEntropyLoss()
         # self.criterion = nn.MSELoss()
+        # self.criterion = F.binary_cross_entropy()
 
 
     def train(self):
@@ -181,7 +182,8 @@ class train_utils(object):
                         else:
                             print("There is no such task!!")
 
-                        loss = self.criterion(logits, labels)
+                        print(logits.shape)
+                        loss = F.binary_cross_entropy(logits, data.y)
                         pred = logits.argmax(dim=1)
                         correct = torch.eq(pred, labels).float().sum().item()
                         loss_temp = loss.item() * bacth_num

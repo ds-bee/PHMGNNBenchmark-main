@@ -8,6 +8,11 @@ class GCN(torch.nn.Module):
     def __init__(self, feature, out_channel,pooltype):
         super(GCN, self).__init__()
 
+        # explainability
+        self.input = None
+        self.final_conv_acts = None
+        self.final_conv_grads = None
+
         self.pool1, self.pool2 = self.poollayer(pooltype)
 
         self.GConv1 = GCNConv(feature,1024)
