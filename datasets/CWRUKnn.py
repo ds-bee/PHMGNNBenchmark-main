@@ -42,7 +42,6 @@ dataname12 = ["112.mat", "125.mat", "138.mat", "177.mat", "192.mat", "204.mat", 
 label = [1, 2, 3, 4, 5, 6, 7, 8, 9]  # The failure data is labeled 1-9
 axis = ["_DE_time", "_FE_time", "_BA_time"]
 
-
 # generate Training Dataset and Testing Dataset
 def get_files(sample_length, root, InputType, task, test=False):
     '''
@@ -76,6 +75,7 @@ def data_load(signal_size, filename, axisname, label, InputType, task):
         realaxis = "X0" + datanumber[0] + axis[0]
     else:
         realaxis = "X" + datanumber[0] + axis[0]
+        #归一化
     fl = loadmat(filename)[realaxis]
     fl = (fl - fl.min()) / (fl.max() - fl.min())
     fl = fl.reshape(-1,)
@@ -95,8 +95,9 @@ def data_load(signal_size, filename, axisname, label, InputType, task):
         data.append(x)
         start += signal_size
         end += signal_size
-
+    # print(data.__sizeof__())
     graphset = KNNGraph(10,data,label,task)
+    # graphset = KNNGraph(1,data,label,task)
 
     return graphset
 

@@ -114,7 +114,7 @@ class train_utils(object):
 
         # Invert the model and define the loss
         self.model.to(self.device)
-        # self.criterion = nn.CrossEntropyLoss()
+        self.criterion = nn.CrossEntropyLoss()
         # self.criterion = nn.MSELoss()
         # self.criterion = F.binary_cross_entropy()
 
@@ -183,7 +183,8 @@ class train_utils(object):
                             print("There is no such task!!")
 
                         print(logits.shape)
-                        loss = F.binary_cross_entropy(logits, data.y)
+                        # loss = F.binary_cross_entropy(logits, data.y)
+                        loss = self.criterion(logits, labels)
                         pred = logits.argmax(dim=1)
                         correct = torch.eq(pred, labels).float().sum().item()
                         loss_temp = loss.item() * bacth_num

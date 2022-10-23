@@ -33,13 +33,13 @@ class GCN(torch.nn.Module):
         x, edge_index, edge_weight = data.x, data.edge_index, data.edge_attr
         x.requires_grad = True
         self.input = x
-        print(x.shape)
+        # print(x.shape)
         x = self.GConv1(x, edge_index, edge_weight)
         x = self.bn1(x)
         x = F.relu(x)
 
         h1 = x
-        print(h1.shape)
+        # print(h1.shape)
         x = self.GConv2(x, edge_index, edge_weight)
         x = self.bn2(x)
         x = F.relu(x)
@@ -59,6 +59,7 @@ class GCN(torch.nn.Module):
         # x = self.dropout(x)
 
         x = self.fc1(x)
+        # x = self.fc1(h4)
 
         return x
 if __name__ == '__main__':
